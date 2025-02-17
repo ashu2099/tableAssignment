@@ -49,7 +49,7 @@ const ProductList = () => {
     <div className="flex flex-col flex-1">
       <div className="relative flex flex-col flex-1 border border-gray-400 rounded-sm overflow-auto">
         <table className="absolute">
-          <thead>
+          <thead className="sticky top-0">
             <tr className="flex">
               {tableHeaders.map((header, idx) => (
                 <th
@@ -70,12 +70,17 @@ const ProductList = () => {
           </thead>
 
           <tbody className="">
-            {products.map((product) => (
-              <tr className="flex border-y" key={product.id}>
+            {products.map((product, idx) => (
+              <tr
+                className={cn("flex border-y hover:bg-gray-100", {
+                  "bg-gray-50": idx % 2 != 0,
+                })}
+                key={product.id}
+              >
                 {tableHeaders.map((header, idx) => (
                   <td
                     className={cn(
-                      "border-r border-gray-400 p-1 h-16  overflow-hidden",
+                      "border-r border-gray-400 p-2 h-12 text-sm overflow-hidden",
                       {
                         "min-w-16": idx === 0,
                         "min-w-32 w-32": idx > 0,
@@ -92,9 +97,9 @@ const ProductList = () => {
         </table>
       </div>
 
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="flex items-center mx-2 text-sm text-muted-foreground">
-          <div className="whitespace-nowrap mr-2">Page:</div>
+      <div className="flex flex-col md:flex-row flex-wrap gap-2 items-center justify-center md:justify-between space-x-2 py-4">
+        <div className="flex items-center text-sm text-muted-foreground">
+          <div className="mr-2">Page:</div>
           <Input
             className="w-24"
             type="number"
@@ -106,33 +111,29 @@ const ProductList = () => {
             }}
           />
 
-          <div className="whitespace-nowrap mx-2"> of {maxPages}</div>
+          <div className="whitespace-nowrap"> of {maxPages}</div>
 
           <Button
-            variant="outline"
             size="sm"
+            className="ml-2"
             onClick={() => {
               goToPage(jumpInput);
             }}
           >
             Jump
           </Button>
+        </div>
 
-          <div className="mx-2">| Total {total} Records</div>
+        <div className="flex flex-1 items-center justify-center">
+          Total {total} Records
         </div>
 
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={prevPage}
-            disabled={currentPage === 1}
-          >
+          <Button size="sm" onClick={prevPage} disabled={currentPage === 1}>
             Previous
           </Button>
 
           <Button
-            variant="outline"
             size="sm"
             onClick={nextPage}
             disabled={currentPage === maxPages}
