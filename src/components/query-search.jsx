@@ -6,12 +6,15 @@ import { useAppStore } from "@/store";
 export const QuerySearch = () => {
   const [showError, setShowError] = useState(false);
 
-  const { queryInput, setQueryInput, queryHistory, addQueryToHistory } =
-    useAppStore();
+  const {
+    queryInput,
+    setQueryInput,
+    queryHistory,
+    addQueryToHistory,
+    switchApiForNewQuery,
+  } = useAppStore();
 
   const handleSubmit = () => {
-    console.log("submit called");
-
     if (!queryInput) {
       setShowError(true);
     } else {
@@ -20,6 +23,8 @@ export const QuerySearch = () => {
       if (!queryHistory.includes(queryInput)) {
         addQueryToHistory(queryInput);
       }
+
+      switchApiForNewQuery();
     }
   };
 
@@ -36,7 +41,7 @@ export const QuerySearch = () => {
             value={queryInput}
           />
           {showError && (
-            <p className="text-red-500 mt-1">Please Type or Select a query.</p>
+            <p className="text-red-500 mt-1">Please Type or Select a Query.</p>
           )}
         </div>
 

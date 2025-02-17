@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 
 import { cn } from "@/lib/utils";
 import { Input } from "./ui/input";
+import { RowsPerPage } from "./rows-per-page";
 
 const ProductList = () => {
   const {
@@ -11,6 +12,7 @@ const ProductList = () => {
     loading,
     error,
     fetchProducts,
+    setNewRecordPerPage,
     nextPage,
     prevPage,
     goToPage,
@@ -36,7 +38,7 @@ const ProductList = () => {
   if (loading) {
     return (
       <div className="flex flex-col flex-1 items-center justify-center">
-        <div className="animate-spin rounded-full border-t-2 border-blue-500 w-32 h-32 border-b-2"></div>
+        <div className="animate-spin rounded-full border-t-2 border-gray-500 w-32 h-32 border-b-2"></div>
       </div>
     );
   }
@@ -48,17 +50,17 @@ const ProductList = () => {
   return (
     <div className="flex flex-col flex-1">
       <div className="relative flex flex-col flex-1 border border-gray-400 rounded-sm overflow-auto">
-        <table className="absolute">
+        <table className="absolute min-w-full">
           <thead className="sticky top-0">
             <tr className="flex">
               {tableHeaders.map((header, idx) => (
                 <th
                   className={cn(
                     "border-b border-r bg-gray-200 p-1 border-gray-400 ",
-                    "flex items-center justify-center",
+                    "flex flex-1 items-center justify-center",
                     {
-                      "min-w-16": idx === 0,
-                      "min-w-32 w-32": idx > 0,
+                      "min-w-16 max-w-16": idx === 0,
+                      "min-w-32": idx > 0,
                     }
                   )}
                   key={idx}
@@ -80,10 +82,10 @@ const ProductList = () => {
                 {tableHeaders.map((header, idx) => (
                   <td
                     className={cn(
-                      "border-r border-gray-400 p-2 h-12 text-sm overflow-hidden",
+                      "border-r border-gray-400 p-2 h-12 text-sm overflow-hidden flex-1",
                       {
-                        "min-w-16": idx === 0,
-                        "min-w-32 w-32": idx > 0,
+                        "min-w-16 max-w-16": idx === 0,
+                        "min-w-32": idx > 0,
                       }
                     )}
                     key={header?.value}
@@ -124,7 +126,14 @@ const ProductList = () => {
           </Button>
         </div>
 
-        <div className="flex flex-1 items-center justify-center">
+        <div className="w-48">
+          <RowsPerPage
+            rowsPerPageChange={setNewRecordPerPage}
+            rowsPerPageValue={limit}
+          />
+        </div>
+
+        <div className="flex items-center justify-center min-w-32">
           Total {total} Records
         </div>
 

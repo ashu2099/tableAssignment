@@ -4,6 +4,8 @@ import { getKeysAsTitleCase } from "./lib/utils";
 
 const QUERY_STORAGE_KEY = "QUERY_STORAGE_KEY";
 
+const DEFAULT_RECORDS_PER_PAGE = 30;
+
 const DUMMY_HISTORY = [
   "SELECT ProductName, Price FROM Products ORDER BY Price DESC;",
   "SELECT OrderID, CustomerName FROM Orders;",
@@ -41,27 +43,58 @@ export const useAppStore = create((set, get) => ({
 
   products: [],
   tableHeaders: [],
+  currentApiUrlIndex: 0,
+  apiUrls: ["https://dummyjson.com/products", "https://dummyjson.com/recipes"],
   loading: false,
   error: null,
-  limit: 25, // Items per page
+  limit: DEFAULT_RECORDS_PER_PAGE, // Items per page
   skip: 0, // Items to skip (for pagination)
   total: 0, // Total number of products from API
   currentPage: 1,
 
+  setNewRecordPerPage: (newLimit) => {
+    const { fetchProducts } = get();
+
+    set({
+      limit: newLimit,
+    });
+
+    fetchProducts();
+  },
+
+  switchApiForNewQuery: () => {
+    const { currentApiUrlIndex, fetchProducts } = get();
+
+    set({
+      loading: true,
+      currentApiUrlIndex: currentApiUrlIndex == 1 ? 0 : 1,
+      skip: 0,
+      total: 0,
+      currentPage: 1,
+    });
+
+    setTimeout(() => {
+      fetchProducts();
+    }, 1000);
+  },
+
   fetchProducts: async () => {
     set({ loading: true, error: null });
 
-    const { limit, skip } = get();
+    const { apiUrls, currentApiUrlIndex, limit, skip } = get();
 
     try {
       const response = await axios.get(
-        `https://dummyjson.com/products?limit=${limit}&skip=${skip}`
+        `${apiUrls[currentApiUrlIndex]}?limit=${limit}&skip=${skip}`
       );
+
+      let records = response.data.products || response.data.recipes;
+
       set({
-        products: response.data.products,
+        products: records,
         total: response.data.total, // Important: Store the total count
         loading: false,
-        tableHeaders: getKeysAsTitleCase(response?.data?.products?.[0]),
+        tableHeaders: getKeysAsTitleCase(records?.[0]),
       });
     } catch (err) {
       set({ error: err.message, loading: false });
