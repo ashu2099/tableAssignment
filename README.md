@@ -6,3 +6,22 @@ Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+# Libraries Used
+This project utilizes the following libraries and technologies:
+
+**UI:**
+
+*   Tailwind CSS
+*   Radix UI
+*   Shadcn UI
+*   (and associated dependencies)
+
+**State Management:**
+
+*   Zustand (with Redux Thunk-like structure)
+
+**APIs:**
+
+*   Axios
+*   DummyJSON.com
